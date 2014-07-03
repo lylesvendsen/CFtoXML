@@ -49,7 +49,11 @@ component displayname="cftoxml" accessors="true" output="false"
 		if(IsSimpleValue(arguments.sourceVar)){
 			local.data = xmlformat(arguments.sourceVar);
 		}else if(isObject(arguments.sourceVar)){
-			local.data = getXML(sourceVar:objectToStuct(arguments.sourceVar), rootElement:arguments.rootElement, docHeader:false, propertyVars:{objecttype:listLast(getMetaData(arguments.sourceVar).name,".")} ); 
+			local.sourceVar = objectToStuct(arguments.sourceVar);
+			structAppend(local.propertyVars, getIdProperties(local.sourceVar), false);
+			structAppend(local.propertyVars, {type:"complex"}, false);
+			structAppend(local.propertyVars, {objecttype:listLast(getMetaData(arguments.sourceVar).name,".")}, false);
+			local.data = getStructXML(local.sourceVar);
 		}else if(isValid("struct", arguments.sourceVar)){
 			structAppend(local.propertyVars, getIdProperties(arguments.sourceVar), false);
 			structAppend(local.propertyVars, {type:"complex"}, false);
